@@ -1,0 +1,716 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Parla italiano</title>
+<meta name="description" content="Entraînement oral à l'italien : 200 cartes classées par niveau, du voyage aux idiomes.">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#E7E3D8">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Parla italiano">
+<style>
+  :root{
+    --paper:#E7E3D8;
+    --card:#F8F6F0;
+    --ink:#1B2B3A;
+    --ink-soft:#5E6B77;
+    --line:#CCD2CE;
+    --blue:#2B5A9B;
+    --ochre:#BE8A2A;
+    --green:#4C7A4E;
+    --seal:#9C3B2F;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--paper);color:var(--ink);font-family:var(--serif);
+    font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:660px;margin:0 auto;padding:26px 20px 64px}
+  header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap}
+  h1{font-size:27px;font-weight:600;letter-spacing:-.01em;margin:0}
+  h1 span{font-size:19px;color:var(--ink-soft);margin-left:10px;font-style:italic}
+  .score{font-size:14px;color:var(--ink-soft);text-align:right}
+  .score b{font-weight:600;color:var(--ink)}
+  .intro{color:var(--ink-soft);margin:0 0 22px;max-width:62ch}
+
+  .tier{margin-bottom:20px}
+  .tierhead{display:flex;align-items:baseline;gap:10px;border-bottom:1px solid var(--line);padding-bottom:5px;margin-bottom:10px}
+  .tierhead h2{font-size:18px;font-weight:600;margin:0}
+  .tierhead .lvl{width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;
+    font-size:12.5px;color:var(--card);flex:none}
+  .l1{background:var(--green)} .l2{background:var(--blue)} .l3{background:var(--ochre)} .l4{background:var(--seal)}
+  .tierhead .pick{margin-left:auto;font-size:13.5px;color:var(--ink-soft);background:none;border:none;
+    font-family:inherit;cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:0}
+  .tierhead .desc{font-size:13.5px;color:var(--ink-soft);font-style:italic}
+  .cats{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:9px}
+  .cat{background:var(--card);border:1px solid var(--line);border-radius:2px;padding:11px 13px 10px;
+    text-align:left;cursor:pointer;font-family:inherit;font-size:15.5px;color:var(--ink);
+    display:flex;flex-direction:column;gap:1px}
+  .cat:hover{border-color:var(--blue)}
+  .cat.on{border-color:var(--blue);box-shadow:inset 0 0 0 1px var(--blue)}
+  .cat .it{font-size:13px;color:var(--seal);font-style:italic}
+  .cat .meta{font-size:12.5px;color:var(--ink-soft)}
+
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:18px 0}
+  button.act{font-family:inherit;font-size:16px;padding:11px 20px;border-radius:2px;cursor:pointer;
+    background:var(--ink);color:var(--card);border:1px solid var(--ink)}
+  button.act.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+  button.act.ghost:hover{border-color:var(--ink)}
+  button.act:disabled{opacity:.4;cursor:default}
+  button:focus-visible,.cat:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+  .toggle{font-size:14px;color:var(--ink-soft);display:flex;align-items:center;gap:7px;cursor:pointer}
+
+  .stage{background:var(--card);border:1px solid var(--line);border-radius:2px;padding:26px 22px 22px;position:relative;text-align:center}
+  .seal{position:absolute;top:13px;right:13px;width:30px;height:30px;border-radius:50%;
+    color:var(--card);font-size:13px;display:flex;align-items:center;justify-content:center}
+  .emoji{font-size:72px;line-height:1;margin:4px 0 12px}
+  .fr{font-size:22px;font-weight:600;margin:0 0 4px}
+  .hint{font-size:14px;color:var(--ink-soft);margin:0;font-style:italic}
+  .answer{margin:16px 0 0;min-height:78px}
+  .it-a{font-size:31px;line-height:1.3;margin:0;color:var(--blue)}
+  .note{font-size:14.5px;color:var(--ink-soft);margin:6px auto 0;max-width:48ch}
+  .veil{color:var(--ink-soft);font-size:15px;padding:24px 0;margin:0}
+
+  .mic{width:80px;height:80px;border-radius:50%;border:1.5px solid var(--ink);background:transparent;
+    font-size:29px;cursor:pointer;margin:18px auto 6px;display:block;color:var(--ink);transition:background .15s,border-color .15s}
+  .mic:hover{background:rgba(43,90,155,.1)}
+  .mic.live{border-color:var(--blue);background:rgba(43,90,155,.15);animation:pulse 1.15s ease-out infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(43,90,155,.4)}100%{box-shadow:0 0 0 22px rgba(43,90,155,0)}}
+  @media (prefers-reduced-motion:reduce){.mic.live{animation:none}}
+
+  .status{min-height:46px;font-size:15px;color:var(--ink-soft);margin:4px 0 0}
+  .status .heard{color:var(--ink);font-style:italic}
+  .status.good{color:var(--green);font-weight:600}
+  .status.near{color:var(--ochre)}
+
+  .bar{height:3px;background:var(--line);margin:20px 0 6px;position:relative}
+  .bar i{position:absolute;left:0;top:0;bottom:0;background:var(--blue);transition:width .3s}
+
+  .drill{background:var(--card);border:1px solid var(--line);border-radius:2px;padding:15px 17px;margin-bottom:9px}
+  .drill h3{margin:0 0 4px;font-size:17.5px;font-weight:600}
+  .drill p{margin:0 0 9px;color:var(--ink-soft);font-size:15px;max-width:58ch}
+  .drill .ex{font-size:20px;margin:0 0 9px;color:var(--ink)}
+  .drill .ex em{font-style:normal;color:var(--seal)}
+  small.foot{display:block;color:var(--ink-soft);font-size:13.5px;margin-top:22px;max-width:62ch}
+  .warn{border-left:2px solid var(--ochre);padding:10px 14px;background:rgba(190,138,42,.08);
+    font-size:14.5px;color:var(--ink-soft);margin-bottom:18px}
+  .hidden{display:none}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Parla italiano<span>dal viaggio alla sfumatura</span></h1>
+    <div class="score" id="score"></div>
+  </header>
+
+  <div id="warn" class="warn hidden"></div>
+
+  <!-- ACCUEIL -->
+  <section id="home">
+    <p class="intro">Une carte, une phrase à dire à voix haute. Si la reconnaissance vocale italienne te comprend, tu passes à la suivante. Choisis les rubriques : les quatre paliers vont du strict nécessaire en voyage au lexique que peu de non-natifs manient.</p>
+    <div id="tiers"></div>
+    <div class="row">
+      <button class="act" id="start">Commencer à parler</button>
+      <button class="act ghost" id="goDrills">Prononciation</button>
+      <button class="act ghost" id="goGram">Points de grammaire</button>
+    </div>
+    <div class="row" style="margin-top:-4px">
+      <label class="toggle"><input type="checkbox" id="selfMode"> Mode sans micro (je m'auto-évalue)</label>
+      <label class="toggle"><input type="checkbox" id="onlyWeak"> Réviser seulement mes ratés</label>
+    </div>
+    <small class="foot">Progression enregistrée automatiquement. Les cartes ratées reviennent plus souvent ; une carte est acquise après trois réussites.</small>
+  </section>
+
+  <!-- ENTRAÎNEMENT -->
+  <section id="practice" class="hidden">
+    <div class="stage">
+      <div class="seal" id="seal"></div>
+      <div class="emoji" id="emoji"></div>
+      <p class="fr" id="fr"></p>
+      <p class="hint" id="hint"></p>
+      <div class="answer" id="answer"><p class="veil">Dis-le en italien, puis appuie sur le micro.</p></div>
+      <button class="mic" id="mic" title="Parler">🎙</button>
+      <p class="status" id="status"></p>
+    </div>
+    <div class="bar"><i id="barFill" style="width:0%"></i></div>
+    <div class="row" style="margin-top:12px">
+      <button class="act ghost" id="listen">Écouter le modèle</button>
+      <button class="act ghost" id="slow">Au ralenti</button>
+      <button class="act ghost" id="reveal">Montrer la réponse</button>
+      <button class="act ghost" id="skip">Passer</button>
+      <button class="act ghost" id="quit">Retour</button>
+    </div>
+    <div class="row hidden" id="selfRow">
+      <button class="act" id="selfOk">Je l'ai bien dit</button>
+      <button class="act ghost" id="selfNo">À revoir</button>
+    </div>
+  </section>
+
+  <!-- PRONONCIATION -->
+  <section id="drills" class="hidden">
+    <p class="intro">Les huit endroits où un francophone se trahit en italien. Écoute, répète, vérifie au micro.</p>
+    <div id="drillList"></div>
+    <div class="row"><button class="act ghost" id="quitDrills">Retour</button></div>
+  </section>
+
+  <!-- GRAMMAIRE -->
+  <section id="gram" class="hidden">
+    <p class="intro">Les tournures qui séparent un bon niveau d'un niveau natif. Chaque point se termine par une phrase à dire à voix haute.</p>
+    <div id="gramList"></div>
+    <div class="row"><button class="act ghost" id="quitGram">Retour</button></div>
+  </section>
+</div>
+
+<script>
+/* ---------------- rubriques ---------------- */
+const TIERS = [
+  {n:1,cls:"l1",titre:"Voyage — l'indispensable",desc:"de quoi se débrouiller partout"},
+  {n:2,cls:"l2",titre:"Quotidien",desc:"parler de soi, du temps, du travail"},
+  {n:3,cls:"l3",titre:"Avancé",desc:"pièges, nuances, verbes retors"},
+  {n:4,cls:"l4",titre:"Expert",desc:"idiomes, lexique choisi, proverbes"}
+];
+const CATS = {
+  cortesia:{label:"Politesse",it:"Cortesia",lvl:1},
+  numeri:{label:"Chiffres",it:"Numeri",lvl:1},
+  viaggio:{label:"Transports",it:"In viaggio",lvl:1},
+  orientarsi:{label:"Se repérer",it:"Orientarsi",lvl:1},
+  tavola:{label:"À table",it:"A tavola",lvl:1},
+  acquisti:{label:"Achats",it:"Acquisti",lvl:1},
+  albergo:{label:"Hôtel",it:"In albergo",lvl:1},
+  imprevisti:{label:"Pépins & santé",it:"Imprevisti",lvl:1},
+  chiacchiere:{label:"Bavarder",it:"Due chiacchiere",lvl:2},
+  emozioni:{label:"Humeurs",it:"Emozioni",lvl:2},
+  casa:{label:"Maison & vie pratique",it:"Casa e faccende",lvl:2},
+  tempo:{label:"Temps & météo",it:"Tempo",lvl:2},
+  telefono:{label:"Travail & téléphone",it:"Lavoro e telefono",lvl:2},
+  falsi:{label:"Faux-amis",it:"Falsi amici",lvl:3},
+  sfumature:{label:"Petits mots & nuances",it:"Sfumature",lvl:3},
+  verbi:{label:"Verbes retors",it:"Verbi pronominali",lvl:3},
+  ufficio:{label:"Bureau & compta",it:"Ufficio e contabilità",lvl:3},
+  modidire:{label:"Expressions",it:"Modi di dire",lvl:4},
+  lessico:{label:"Lexique choisi",it:"Lessico ricercato",lvl:4},
+  proverbi:{label:"Proverbes",it:"Proverbi",lvl:4}
+};
+
+/* [cat, emoji, français, italien, note, (variantes acceptées)] */
+const RAW = [
+// ---------- NIVEAU 1 ----------
+["cortesia","☀️","Bonjour","Buongiorno","Jusqu'en début d'après-midi."],
+["cortesia","🌆","Bonsoir","Buonasera","À partir de 16-17 h, selon les régions."],
+["cortesia","🙏","Merci beaucoup","Grazie mille"],
+["cortesia","🤲","Je vous en prie","Prego","Sert aussi à dire « après vous » ou « allez-y »."],
+["cortesia","✋","Excusez-moi","Mi scusi","Vouvoiement. Entre amis : scusa."],
+["cortesia","❓","Je ne comprends pas","Non capisco"],
+["cortesia","🇬🇧","Parlez-vous anglais ?","Parla inglese?"],
+["cortesia","🐢","Plus lentement, s'il vous plaît","Più lentamente, per favore"],
+["cortesia","🔁","Pouvez-vous répéter ?","Può ripetere?"],
+["cortesia","👌","Aucun problème","Nessun problema"],
+["cortesia","🤝","Enchantée","Piacere"],
+["cortesia","👋","Au revoir","Arrivederci","Plus formel : arrivederLa."],
+["numeri","1️⃣","Un","Uno"],
+["numeri","2️⃣","Deux","Due"],
+["numeri","3️⃣","Trois","Tre"],
+["numeri","4️⃣","Quatre","Quattro"],
+["numeri","5️⃣","Cinq","Cinque"],
+["numeri","6️⃣","Six","Sei"],
+["numeri","7️⃣","Sept","Sette","Deux t bien tenus : sinon on entend sete, la soif."],
+["numeri","8️⃣","Huit","Otto"],
+["numeri","9️⃣","Neuf","Nove"],
+["numeri","🔟","Dix","Dieci"],
+["numeri","💯","Cent","Cento"],
+["numeri","🏛️","Mille","Mille"],
+["viaggio","🚉","La gare","La stazione",null,["stazione"]],
+["viaggio","🚆","Le train","Il treno",null,["treno"]],
+["viaggio","🚌","Le bus","L'autobus",null,["autobus"]],
+["viaggio","🎫","Le billet","Il biglietto","À composter : da obliterare.",["biglietto"]],
+["viaggio","🛤️","Le quai","Il binario",null,["binario"]],
+["viaggio","✈️","L'aéroport","L'aeroporto",null,["aeroporto"]],
+["viaggio","⏱️","Le train a du retard","Il treno è in ritardo"],
+["viaggio","📍","Je voudrais aller à Rome","Vorrei andare a Roma"],
+["viaggio","🅿️","Où puis-je me garer ?","Dove posso parcheggiare?"],
+["viaggio","⛽","Le plein, s'il vous plaît","Il pieno, per favore"],
+["orientarsi","🗺️","Où est la place ?","Dov'è la piazza?"],
+["orientarsi","🚻","Où sont les toilettes ?","Dove sono i bagni?"],
+["orientarsi","➡️","À droite","A destra"],
+["orientarsi","⬅️","À gauche","A sinistra"],
+["orientarsi","⬆️","Tout droit","Sempre dritto"],
+["orientarsi","📏","C'est loin ?","È lontano?"],
+["orientarsi","🧭","Je me suis perdue","Mi sono persa","Au masculin : mi sono perso."],
+["orientarsi","🌉","Le pont","Il ponte",null,["ponte"]],
+["orientarsi","⛪","L'église","La chiesa","chi- se dit « ki ».",["chiesa"]],
+["tavola","📖","Le menu, s'il vous plaît","Il menù, per favore"],
+["tavola","👉","Je prends ça","Prendo questo"],
+["tavola","💧","Une carafe d'eau","Una caraffa d'acqua"],
+["tavola","☕","Un café","Un caffè","Au comptoir, dire simplement : un caffè."],
+["tavola","🍷","Un verre de vin rouge","Un bicchiere di vino rosso"],
+["tavola","😋","C'est exquis","È squisito"],
+["tavola","🧾","L'addition, s'il vous plaît","Il conto, per favore"],
+["tavola","🥗","Je suis végétarienne","Sono vegetariana"],
+["tavola","🍝","Une entrée, un plat","Un primo, un secondo","Le primo, c'est les pâtes ou le risotto."],
+["tavola","🍨","Le dessert","Il dolce",null,["dolce"]],
+["tavola","🪑","Le couvert","Il coperto","Le supplément fixe par personne.",["coperto"]],
+["tavola","🍽️","Une table pour deux","Un tavolo per due"],
+["acquisti","💶","Combien ça coûte ?","Quanto costa?"],
+["acquisti","💳","Je peux payer par carte ?","Posso pagare con la carta?"],
+["acquisti","😮","C'est trop cher","È troppo caro"],
+["acquisti","🛍️","Un sac, s'il vous plaît","Una busta, per favore"],
+["acquisti","👀","Je regarde seulement","Sto solo guardando"],
+["acquisti","👗","Je peux l'essayer ?","Posso provarlo?"],
+["acquisti","🏷️","Les soldes","I saldi",null,["saldi"]],
+["acquisti","🧾","Le ticket de caisse","Lo scontrino",null,["scontrino"]],
+["albergo","🏨","L'hôtel","L'albergo",null,["albergo"]],
+["albergo","📝","J'ai une réservation","Ho una prenotazione"],
+["albergo","🔑","La clé","La chiave",null,["chiave"]],
+["albergo","🧳","Les bagages","I bagagli",null,["bagagli"]],
+["albergo","📶","Le mot de passe du wifi","La password del wi-fi"],
+["albergo","⏰","Le petit-déjeuner est à quelle heure ?","A che ora è la colazione?"],
+["albergo","🧺","Une serviette","Un asciugamano","a-shu-ga-MA-no.",["asciugamano"]],
+["albergo","🕒","Je peux laisser mes valises ?","Posso lasciare le valigie?"],
+["imprevisti","🆘","Au secours !","Aiuto!"],
+["imprevisti","🏥","L'hôpital","L'ospedale",null,["ospedale"]],
+["imprevisti","👮","La police","La polizia",null,["polizia"]],
+["imprevisti","💊","La pharmacie","La farmacia",null,["farmacia"]],
+["imprevisti","🤒","Je ne me sens pas bien","Non mi sento bene"],
+["imprevisti","🎒","On m'a volé mon sac","Mi hanno rubato la borsa"],
+["imprevisti","📞","Appelez un médecin","Chiami un medico"],
+["imprevisti","🚑","Les urgences","Il pronto soccorso",null,["pronto soccorso"]],
+// ---------- NIVEAU 2 ----------
+["chiacchiere","💬","Comment ça va ?","Come va?"],
+["chiacchiere","🙂","Ça fait un bail !","Quanto tempo!"],
+["chiacchiere","🏠","Tu viens d'où ?","Di dove sei?"],
+["chiacchiere","💼","Tu fais quoi dans la vie ?","Che lavoro fai?"],
+["chiacchiere","🤙","On se tient au courant","Ci sentiamo"],
+["chiacchiere","🎉","Félicitations !","Complimenti!"],
+["chiacchiere","🍀","Bonne chance !","In bocca al lupo!","On répond crepi! (et surtout pas grazie)."],
+["chiacchiere","🤷","Aucune idée","Non ne ho idea"],
+["chiacchiere","👍","Comme tu veux","Come vuoi tu"],
+["chiacchiere","😅","Ça arrive","Capita"],
+["chiacchiere","🙌","Heureusement !","Meno male!"],
+["chiacchiere","😌","Je t'en prie, ne t'en fais pas","Figurati","Sert à balayer un remerciement."],
+["emozioni","😄","Je suis contente","Sono contenta"],
+["emozioni","😔","Je suis déçue","Sono delusa"],
+["emozioni","😤","Ça m'agace","Mi dà fastidio"],
+["emozioni","😍","Ça me plaît énormément","Mi piace un sacco"],
+["emozioni","😰","J'ai peur","Ho paura"],
+["emozioni","🥱","Je suis crevée","Sono stanca morta"],
+["emozioni","😳","J'ai honte","Mi vergogno"],
+["emozioni","🤩","J'ai hâte","Non vedo l'ora"],
+["emozioni","😒","Ça me barbe","Mi scoccia"],
+["emozioni","🥰","Tu me manques","Mi manchi","Construction inversée : c'est toi qui manques à moi."],
+["emozioni","😶","Ça m'est égal","Non m'importa"],
+["casa","🛋️","Le salon","Il soggiorno",null,["soggiorno"]],
+["casa","🔌","Une prise","Una presa",null,["presa"]],
+["casa","🧹","Faire le ménage","Fare le pulizie"],
+["casa","🗑️","Sortir les poubelles","Portare fuori la spazzatura"],
+["casa","🧺","Lancer une machine","Fare una lavatrice"],
+["casa","🔧","Le robinet fuit","Il rubinetto perde"],
+["casa","🏢","Le syndic de copropriété","L'amministratore di condominio"],
+["casa","🛒","Faire les courses","Fare la spesa"],
+["casa","🧾","Les factures d'énergie","Le bollette","La bolletta, c'est la note d'eau ou d'électricité ; la fattura, la facture commerciale."],
+["tempo","☀️","Il fait beau","C'è il sole"],
+["tempo","🌧️","Il pleut des cordes","Piove a dirotto"],
+["tempo","🥶","Il fait un froid de canard","Fa un freddo cane"],
+["tempo","🌫️","Le brouillard","La nebbia",null,["nebbia"]],
+["tempo","📅","Après-demain","Dopodomani"],
+["tempo","⏳","Tout à l'heure","Tra poco"],
+["tempo","🕰️","Depuis un moment","Da un pezzo"],
+["tempo","🗓️","La semaine dernière","La settimana scorsa"],
+["tempo","⏰","Être en retard","Essere in ritardo"],
+["telefono","📞","Allô ?","Pronto?"],
+["telefono","🙋","Qui est à l'appareil ?","Chi parla?"],
+["telefono","⏸️","Ne quittez pas","Resti in linea"],
+["telefono","✉️","Je vous envoie un mail","Le mando una mail"],
+["telefono","📆","On fixe un rendez-vous ?","Fissiamo un appuntamento?"],
+["telefono","🗣️","Je vous le passe","Glielo passo"],
+["telefono","📋","L'ordre du jour","L'ordine del giorno"],
+["telefono","🤝","Une réunion","Una riunione",null,["riunione"]],
+["telefono","📎","Je vous mets en copie","La metto in copia"],
+// ---------- NIVEAU 3 ----------
+["falsi","🧈","Le beurre (et non le bureau)","Il burro","Le bureau se dit l'ufficio.",["burro"]],
+["falsi","🛏️","La chambre (et non la caméra)","La camera","La caméra, c'est la telecamera.",["camera"]],
+["falsi","🚗","La voiture","La macchina","Machine se dit aussi macchina, le contexte tranche.",["macchina"]],
+["falsi","⬆️","Monter (et non salir)","Salire","Salir se dit sporcare."],
+["falsi","💰","Gagner de l'argent","Guadagnare","Gagner un match : vincere."],
+["falsi","✍️","Signer (et non fermer)","Firmare","Fermer se dit chiudere."],
+["falsi","🎁","Un cadeau (et non un régal)","Un regalo"],
+["falsi","🍽️","Le déjeuner","Il pranzo","Le dîner, c'est la cena.",["pranzo"]],
+["falsi","🏠","Louer un logement","Affittare"],
+["falsi","🧸","Doux, moelleux (et non morbide)","Morbido","Morbide se dit morboso."],
+["falsi","⏳","Attendre (et non s'attendre)","Aspettare","S'attendre à : aspettarsi."],
+["falsi","🤔","Le cas échéant","Eventualmente","Éventuellement au sens de peut-être : magari, forse."],
+["falsi","🥱","Ennuyeux","Noioso","Rien à voir avec noyer ; bruyant se dit rumoroso."],
+["falsi","🍬","Les dragées","I confetti","Les confettis, ce sont les coriandoli.",["confetti"]],
+["falsi","😠","Se fâcher","Arrabbiarsi","Deux b bien tenus."],
+["sfumature","🤔","Peut-être / si seulement !","Magari","Seul, en réponse, il veut dire « ah ça, si seulement ! »."],
+["sfumature","↩️","Au contraire, ou même mieux","Anzi","Corrige ou renchérit : « non è brutto, anzi »."],
+["sfumature","🚫","Pas du tout (familier)","Mica","« Non è mica facile » : ce n'est pas si simple."],
+["sfumature","⚡","Carrément, voire","Addirittura"],
+["sfumature","✅","Justement, exactement","Appunto"],
+["sfumature","🌀","Bref, en somme","Insomma","Seul, en réponse, il veut dire « bof »."],
+["sfumature","🤷","De toute façon","Comunque"],
+["sfumature","🔗","Cependant","Tuttavia"],
+["sfumature","🎯","Vraiment, précisément","Proprio"],
+["sfumature","🕳️","Et pourtant","Eppure"],
+["sfumature","🧩","Si jamais, le cas échéant","Semmai"],
+["sfumature","🫥","Même, jusqu'à","Perfino"],
+["sfumature","🧷","Plutôt","Piuttosto"],
+["sfumature","👉","Donc, ainsi","Dunque"],
+["verbi","💪","Y arriver","Farcela","Passé : ce l'ho fatta."],
+["verbi","🚪","S'en aller","Andarsene","Je m'en vais : me ne vado."],
+["verbi","⏳","Mettre du temps","Metterci","J'en ai pour une heure : ci metto un'ora."],
+["verbi","🧮","Falloir","Volerci","Il faut de la patience : ci vuole pazienza."],
+["verbi","🏄","S'en sortir","Cavarsela","Je me débrouille : me la cavo."],
+["verbi","😡","Le prendre mal","Prendersela","Ne le prends pas mal : non te la prendere."],
+["verbi","🙄","S'en ficher","Fregarsene","Je m'en fiche : me ne frego."],
+["verbi","🤝","Être partant","Starci","Ça marche pour moi : ci sto."],
+["verbi","💡","Se rendre compte","Rendersi conto","Je m'en rends compte : me ne rendo conto."],
+["verbi","👁️","S'apercevoir","Accorgersi","Je m'en suis aperçue : me ne sono accorta."],
+["verbi","🎒","Se débarrasser de","Sbarazzarsi di"],
+["ufficio","🧾","La facture","La fattura",null,["fattura"]],
+["ufficio","💸","Le virement","Il bonifico",null,["bonifico"]],
+["ufficio","📉","Le bilan","Il bilancio",null,["bilancio"]],
+["ufficio","🧮","L'expert-comptable","Il commercialista",null,["commercialista"]],
+["ufficio","💼","La fiche de paie","La busta paga",null,["busta paga"]],
+["ufficio","🏛️","La TVA","L'IVA","Imposta sul valore aggiunto.",["iva"]],
+["ufficio","⏰","L'échéance","La scadenza",null,["scadenza"]],
+["ufficio","📊","Le chiffre d'affaires","Il fatturato",null,["fatturato"]],
+["ufficio","💰","Un acompte","Un acconto",null,["acconto"]],
+["ufficio","📄","Un devis","Un preventivo",null,["preventivo"]],
+["ufficio","🤝","Un CDI","Un contratto a tempo indeterminato"],
+["ufficio","📥","Le relevé de compte","L'estratto conto",null,["estratto conto"]],
+["ufficio","🖋️","Le bon de commande","L'ordine d'acquisto"],
+// ---------- NIVEAU 4 ----------
+["modidire","🐺","Bonne chance (littéral : dans la gueule du loup)","In bocca al lupo"],
+["modidire","🤲","Être dans le coup, avoir la main sur les affaires","Avere le mani in pasta"],
+["modidire","🕊️","Faire d'une pierre deux coups","Prendere due piccioni con una fava"],
+["modidire","💸","Être fauchée","Essere al verde"],
+["modidire","😡","Être d'une humeur de chien","Avere un diavolo per capello"],
+["modidire","🍩","On ne réussit pas tout à tous les coups","Non tutte le ciambelle riescono col buco"],
+["modidire","🪨","Rester médusée","Rimanere di sasso"],
+["modidire","🦵","Voir trop grand pour soi","Fare il passo più lungo della gamba"],
+["modidire","☁️","Tomber des nues","Cadere dalle nuvole"],
+["modidire","🐟","Ne plus savoir sur quel pied danser","Non sapere che pesci pigliare"],
+["modidire","🌧️","Un malheur n'arrive jamais seul","Piove sul bagnato"],
+["modidire","⛵","Aller à merveille","Andare a gonfie vele"],
+["modidire","🤐","Motus et bouche cousue !","Acqua in bocca!"],
+["modidire","🧂","Ne pas avoir inventé l'eau chaude","Non aver inventato l'acqua calda"],
+["lessico","✨","Arborer, étaler","Sfoggiare"],
+["lessico","🧗","Se démener, se débrouiller tant bien que mal","Arrabattarsi"],
+["lessico","💔","Poignant, déchirant","Struggente"],
+["lessico","🧊","La consternation","Lo sgomento",null,["sgomento"]],
+["lessico","🐢","S'attarder, tergiverser","Indugiare"],
+["lessico","🦊","Fin, d'esprit vif","Arguto"],
+["lessico","🔭","Clairvoyant, qui voit loin","Lungimirante"],
+["lessico","🪨","Obstinée, tête de mule","Caparbia"],
+["lessico","🕯️","Mesquin","Meschino"],
+["lessico","🌪️","Bouleversant","Sconvolgente"],
+["lessico","🧵","Démêler, débrouiller","Dipanare"],
+["lessico","🎣","Flatter","Lusingare"],
+["lessico","😎","Effrontée, crâneuse","Spavalda"],
+["lessico","🧭","Avisée, circonspecte","Accorta"],
+["lessico","🌊","Irrésistible, débordant","Travolgente"],
+["lessico","🕸️","Alambiqué, tarabiscoté","Contorto"],
+["proverbi","🌅","L'avenir appartient à ceux qui se lèvent tôt","Chi dorme non piglia pesci"],
+["proverbi","🍷","Les meilleurs parfums sont dans les petits flacons","Nella botte piccola c'è il vino buono"],
+["proverbi","🩼","On prend les défauts de ceux qu'on fréquente","Chi va con lo zoppo impara a zoppicare"],
+["proverbi","🕰️","Ne remets pas à demain ce que tu peux faire aujourd'hui","Chi ha tempo non aspetti tempo"],
+["proverbi","🌤️","Après la pluie, le beau temps","Dopo la pioggia arriva il sereno"],
+["proverbi","🌊","Il y a loin de la coupe aux lèvres","Tra il dire e il fare c'è di mezzo il mare"],
+["proverbi","🏛️","Rome ne s'est pas faite en un jour","Roma non è stata costruita in un giorno"],
+["proverbi","🐈","Tant va la cruche à l'eau qu'à la fin elle se casse","Tanto va la gatta al lardo che ci lascia lo zampino"]
+];
+
+const ARTICLES=/^(il|lo|la|i|gli|le|un|uno|una|l|un')\s*/i;
+const W = RAW.map((r,i)=>{
+  const acc=[r[3]].concat(r[5]||[]);
+  const bare=r[3].replace(ARTICLES,"");
+  if(bare!==r[3])acc.push(bare);
+  return {id:i,cat:r[0],emoji:r[1],fr:r[2],it:r[3],note:r[4]||"",accept:acc};
+});
+
+const DRILLS = [
+  {t:"Les consonnes doubles changent le sens",d:"On tient la consonne un temps entier, on ne la double pas « à la française ». Nono est neuvième, nonno est grand-père ; capello un cheveu, cappello un chapeau.",ex:"no<em>nn</em>o · ca<em>pp</em>ello · se<em>tt</em>e",say:"cappello"},
+  {t:"Aucune voyelle nasale",d:"Le piège numéro un du francophone. Vino, pane, bene : le n se prononce franchement et la voyelle reste pure, jamais « in », « an », « on » à la française.",ex:"vi<em>n</em>o · pa<em>n</em>e · bu<em>on</em>giorno",say:"buongiorno"},
+  {t:"Le R se roule sur le bout de la langue",d:"Un battement pour un simple r, plusieurs pour rr. Le R raclé du fond de la gorge est le marqueur français par excellence.",ex:"<em>r</em>istorante · bi<em>rr</em>a · ca<em>rr</em>o",say:"ristorante"},
+  {t:"GLI, un L mouillé",d:"Proche du « lli » de million, jamais le « gl » de glisser. La langue vient contre le palais.",ex:"fami<em>gli</em>a · a<em>gli</em>o · mo<em>gli</em>e",say:"famiglia"},
+  {t:"C et G se durcissent avec un H",d:"Devant e et i, c se dit « tch » et g se dit « dj ». Le h intercalé les redurcit : chiesa se dit « kiéza », ghiaccio « guiatcho ».",ex:"<em>ce</em>na · <em>chi</em>esa · <em>ge</em>lato · <em>ghi</em>accio",say:"ghiaccio"},
+  {t:"Toutes les finales se prononcent",d:"Il n'y a pas de e muet. Grazie fait trois syllabes, pane en fait deux. Un mot avalé en fin de phrase est immédiatement repéré.",ex:"gra<em>zi</em>e · pan<em>e</em> · notte",say:"grazie"},
+  {t:"L'accent tonique tombe souvent avant la fin",d:"Beaucoup de mots sont sdruccioli, accentués sur l'avant-avant-dernière syllabe : TE-le-fo-no, SU-bi-to, A-bi-ta-no. Le français, lui, accentue la fin.",ex:"te<em>lé</em>fono → <em>te</em>lefono · <em>su</em>bito",say:"telefono"},
+  {t:"Le Z et le S changent de sonorité",d:"Grazie donne « ts », zero donne « dz ». Entre deux voyelles, le s se sonorise : casa se dit « caza », mais cassa reste sourd.",ex:"gra<em>z</em>ie · <em>z</em>ero · ca<em>s</em>a",say:"casa"}
+];
+
+const GRAM = [
+  {t:"Le subjonctif après l'opinion",d:"Penso, credo, spero, sembra che appellent le congiuntivo. Le laisser tomber s'entend tout de suite, même à l'oral relâché.",ex:"Penso che <em>sia</em> troppo tardi.",say:"penso che sia troppo tardi"},
+  {t:"Ci et ne, les deux petites particules",d:"Ne remplace un complément introduit par di ou une quantité ; ci remplace un lieu ou un « à cela ». Ce ne sono tre : il y en a trois.",ex:"Ce <em>ne</em> sono tre. · <em>Ci</em> penso io.",say:"ce ne sono tre"},
+  {t:"Passato prossimo ou imperfetto",d:"L'imparfait pose le décor et la durée, le passé composé marque l'événement qui survient dedans.",ex:"Mentre <em>uscivo</em>, <em>ho incontrato</em> Anna.",say:"mentre uscivo ho incontrato anna"},
+  {t:"Le participe s'accorde avec le pronom",d:"Avec avere, le participe s'accorde quand un pronom complément direct le précède : le ho viste, non le ho visto.",ex:"Le ho <em>viste</em> ieri.",say:"le ho viste ieri"},
+  {t:"Le si impersonnel",d:"Là où le français dit on, l'italien met si et accorde le verbe au nombre du complément : si mangia bene, si vendono libri.",ex:"In Italia <em>si mangia</em> bene.",say:"in italia si mangia bene"},
+  {t:"Le futur de probabilité",d:"Le futur sert à formuler une hypothèse sur le présent. Saranno le otto veut dire « il doit être huit heures ».",ex:"<em>Saranno</em> le otto.",say:"saranno le otto"},
+  {t:"Stare + gérondif pour l'action en cours",d:"L'équivalent du be + -ing. Sto lavorando : je suis en train de travailler. Le présent simple ne le rend pas.",ex:"<em>Sto</em> lavo<em>rando</em>.",say:"sto lavorando"},
+  {t:"Les pronoms combinés",d:"Indirect avant direct, avec transformation : mi + lo donne me lo, gli/le + lo donne glielo, en un seul mot.",ex:"<em>Glielo</em> dico domani.",say:"glielo dico domani"}
+];
+
+/* ---------------- utilitaires ---------------- */
+const $=id=>document.getElementById(id);
+function norm(s){
+  return String(s||"").toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .replace(/[^a-z0-9]/g,"");
+}
+function lev(a,b){
+  const m=a.length,n=b.length;if(!m)return n;if(!n)return m;
+  let prev=Array.from({length:n+1},(_,j)=>j),cur=new Array(n+1);
+  for(let i=1;i<=m;i++){cur[0]=i;
+    for(let j=1;j<=n;j++){cur[j]=Math.min(prev[j]+1,cur[j-1]+1,prev[j-1]+(a[i-1]===b[j-1]?0:1));}
+    [prev,cur]=[cur,prev];}
+  return prev[n];
+}
+const sim=(a,b)=>{a=norm(a);b=norm(b);const L=Math.max(a.length,b.length);return L?1-lev(a,b)/L:0;};
+function best(heardList,accepts){
+  let s=0;
+  for(const h of heardList) for(const a of accepts){
+    const v=sim(h,a); if(v>s)s=v;
+    if(norm(a).length>=4 && norm(h).includes(norm(a))) s=Math.max(s,.95);
+  }
+  return s;
+}
+
+/* ---------------- progression ---------------- */
+let prog={box:{},streak:0};
+const KEY="parla-italiano";
+async function load(){
+  try{const r=await window.storage.get(KEY);if(r&&r.value){prog=JSON.parse(r.value);paintScore();return;}}catch(e){}
+  try{const v=localStorage.getItem(KEY);if(v)prog=JSON.parse(v);}catch(e){}
+  paintScore();
+}
+async function save(){
+  try{await window.storage.set(KEY,JSON.stringify(prog));return;}catch(e){}
+  try{localStorage.setItem(KEY,JSON.stringify(prog));}catch(e){}
+}
+function paintScore(){
+  const done=Object.values(prog.box||{}).filter(b=>b>=3).length;
+  $("score").innerHTML=`<b>${done}</b> / ${W.length} cartes acquises<br>série en cours : <b>${prog.streak||0}</b>`;
+}
+
+/* ---------------- voix ---------------- */
+let itVoice=null;
+function pickVoice(){
+  const vs=(window.speechSynthesis&&speechSynthesis.getVoices())||[];
+  itVoice=vs.find(v=>v.lang&&v.lang.toLowerCase().startsWith("it"))||null;
+}
+if(window.speechSynthesis){pickVoice();speechSynthesis.onvoiceschanged=pickVoice;}
+function speak(text,rate){
+  if(!window.speechSynthesis)return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(String(text).replace(/<[^>]+>/g,""));
+  u.lang="it-IT";u.rate=rate||.9;if(itVoice)u.voice=itVoice;
+  speechSynthesis.speak(u);
+}
+
+/* ---------------- reconnaissance ---------------- */
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+let rec=null,listening=false,micBlocked=false;
+function initRec(onResult,onEnd){
+  if(!SR)return null;
+  const r=new SR();
+  r.lang="it-IT";r.interimResults=false;r.maxAlternatives=5;r.continuous=false;
+  r.onresult=e=>{
+    const alts=[];const res=e.results[e.results.length-1];
+    for(let i=0;i<res.length;i++)alts.push(res[i].transcript);
+    onResult(alts);
+  };
+  r.onerror=e=>{
+    if(e.error==="not-allowed"||e.error==="service-not-allowed"){micBlocked=true;showWarn(true);}
+    else if(e.error==="no-speech"){setStatus("Je n'ai rien entendu. Rapproche-toi du micro et réessaie.","");}
+  };
+  r.onend=()=>{listening=false;onEnd&&onEnd();};
+  return r;
+}
+function showWarn(blocked){
+  const w=$("warn");w.classList.remove("hidden");
+  w.innerHTML = blocked
+    ? "Le micro est bloqué dans cette fenêtre. Ouvre le fichier via le petit serveur local, dans Chrome : la reconnaissance vocale y fonctionne. En attendant, le mode auto-évaluation reste disponible."
+    : "Ce navigateur ne gère pas la reconnaissance vocale — il faut Chrome ou Edge. Passe en mode auto-évaluation : tu dis la phrase, tu révèles la réponse, tu juges.";
+}
+
+/* ---------------- accueil ---------------- */
+let selected=new Set(["cortesia","viaggio","orientarsi","tavola"]);
+function paintCats(){
+  const host=$("tiers");host.innerHTML="";
+  TIERS.forEach(t=>{
+    const keys=Object.keys(CATS).filter(k=>CATS[k].lvl===t.n);
+    const sec=document.createElement("div");sec.className="tier";
+    const head=document.createElement("div");head.className="tierhead";
+    head.innerHTML=`<span class="lvl ${t.cls}">${t.n}</span><h2>${t.titre}</h2><span class="desc">${t.desc}</span>`;
+    const pick=document.createElement("button");pick.className="pick";
+    const allOn=keys.every(k=>selected.has(k));
+    pick.textContent=allOn?"tout retirer":"tout prendre";
+    pick.onclick=()=>{keys.forEach(k=>allOn?selected.delete(k):selected.add(k));paintCats();};
+    head.appendChild(pick);
+    const grid=document.createElement("div");grid.className="cats";
+    keys.forEach(k=>{
+      const c=CATS[k];
+      const n=W.filter(w=>w.cat===k).length;
+      const done=W.filter(w=>w.cat===k&&(prog.box[w.id]||0)>=3).length;
+      const b=document.createElement("button");
+      b.className="cat"+(selected.has(k)?" on":"");
+      b.setAttribute("aria-pressed",selected.has(k));
+      b.innerHTML=`<span class="it">${c.it}</span>${c.label}<span class="meta">${done}/${n} acquis</span>`;
+      b.onclick=()=>{selected.has(k)?selected.delete(k):selected.add(k);paintCats();};
+      grid.appendChild(b);
+    });
+    sec.append(head,grid);host.appendChild(sec);
+  });
+}
+
+/* ---------------- session ---------------- */
+let deck=[],idx=0,cur=null,revealed=false,selfMode=false;
+function buildDeck(){
+  let pool=W.filter(w=>selected.has(w.cat));
+  if($("onlyWeak").checked){
+    const weak=pool.filter(w=>(prog.box[w.id]||0)<1&&prog.box.hasOwnProperty(w.id));
+    if(weak.length)pool=weak;
+  }
+  const weighted=[];
+  pool.forEach(w=>{const b=prog.box[w.id]||0;const n=b>=3?1:(4-b);for(let i=0;i<n;i++)weighted.push(w);});
+  const seen=new Set();deck=[];
+  weighted.sort(()=>Math.random()-.5).forEach(w=>{if(!seen.has(w.id)){seen.add(w.id);deck.push(w);}});
+  deck=deck.slice(0,20);idx=0;
+}
+function show(){
+  if(idx>=deck.length){endSession();return;}
+  cur=deck[idx];revealed=false;
+  const lvl=CATS[cur.cat].lvl;
+  const seal=$("seal");seal.className="seal l"+lvl;seal.textContent=lvl;
+  $("emoji").textContent=cur.emoji;
+  $("fr").textContent=cur.fr;
+  $("hint").textContent=(prog.box[cur.id]||0)>=3?"déjà acquise — révision":CATS[cur.cat].it;
+  $("answer").innerHTML='<p class="veil">Dis-le en italien, puis appuie sur le micro.</p>';
+  setStatus(selfMode?"Dis-le à voix haute, puis révèle la réponse.":"","");
+  $("barFill").style.width=(idx/deck.length*100)+"%";
+  $("selfRow").classList.toggle("hidden",!selfMode);
+  $("mic").classList.toggle("hidden",selfMode);
+}
+function revealAnswer(){
+  revealed=true;
+  $("answer").innerHTML=`<p class="it-a">${cur.it}</p>`+(cur.note?`<p class="note">${cur.note}</p>`:"");
+  speak(cur.it);
+}
+function setStatus(txt,cls){const s=$("status");s.className="status "+(cls||"");s.innerHTML=txt;}
+function scoreCard(ok){
+  const b=prog.box[cur.id]||0;
+  prog.box[cur.id]=ok?Math.min(3,b+1):0;
+  prog.streak=ok?(prog.streak||0)+1:0;
+  save();paintScore();
+}
+function next(delay){setTimeout(()=>{idx++;show();},delay||0);}
+function endSession(){
+  $("barFill").style.width="100%";
+  $("answer").innerHTML="";
+  $("emoji").textContent="🍋";
+  $("fr").textContent="Série terminée";
+  $("hint").textContent="Bravo — relance un tour ou change de palier.";
+  $("seal").className="seal l1";$("seal").textContent="✓";
+  setStatus("","");
+  $("mic").classList.add("hidden");
+  $("selfRow").classList.add("hidden");
+  paintCats();
+}
+
+/* ---------------- écouteurs ---------------- */
+$("start").onclick=()=>{
+  if(!selected.size){alert("Choisis au moins une rubrique.");return;}
+  selfMode=$("selfMode").checked||!SR;
+  if(!SR&&!$("selfMode").checked)showWarn(false);
+  buildDeck();
+  if(!deck.length){alert("Aucune carte à réviser dans ces rubriques.");return;}
+  $("home").classList.add("hidden");$("drills").classList.add("hidden");$("gram").classList.add("hidden");
+  $("practice").classList.remove("hidden");
+  $("mic").classList.remove("hidden");
+  show();
+};
+$("quit").onclick=()=>{
+  if(listening&&rec)rec.stop();
+  $("practice").classList.add("hidden");$("home").classList.remove("hidden");
+  paintCats();
+};
+$("skip").onclick=()=>next();
+$("reveal").onclick=()=>{if(cur)revealAnswer();};
+$("listen").onclick=()=>{if(cur)speak(cur.it);};
+$("slow").onclick=()=>{if(cur)speak(cur.it,.55);};
+$("selfOk").onclick=()=>{if(!revealed)revealAnswer();scoreCard(true);setStatus("Bien joué.","good");next(800);};
+$("selfNo").onclick=()=>{if(!revealed)revealAnswer();scoreCard(false);setStatus("On la reverra tout à l'heure.","");next(1000);};
+
+$("mic").onclick=()=>{
+  if(!SR){showWarn(false);return;}
+  if(micBlocked){showWarn(true);return;}
+  if(listening){rec&&rec.stop();return;}
+  rec=rec||initRec(handleHeard,()=>$("mic").classList.remove("live"));
+  try{listening=true;$("mic").classList.add("live");setStatus("J'écoute…","");rec.start();}
+  catch(e){listening=false;$("mic").classList.remove("live");}
+};
+function handleHeard(alts){
+  const s=best(alts,cur.accept);
+  const heard=`<span class="heard">${alts[0]}</span>`;
+  if(s>=.82){
+    revealAnswer();scoreCard(true);
+    setStatus("Compris — "+heard,"good");
+    next(1500);
+  }else if(s>=.55){
+    setStatus("Presque : j'ai entendu "+heard+". Écoute le modèle et reprends.","near");
+    speak(cur.it,.7);
+  }else{
+    setStatus("J'ai entendu "+heard+". Réessaie, ou montre la réponse.","");
+  }
+}
+
+/* sections annexes */
+function testable(host,say){
+  const row=document.createElement("div");row.className="row";row.style.margin="0";
+  const b1=document.createElement("button");b1.className="act ghost";b1.textContent="Écouter";
+  b1.onclick=()=>speak(say,.8);
+  const b2=document.createElement("button");b2.className="act ghost";b2.textContent="Me tester";
+  const fb=document.createElement("span");fb.style.fontSize="14px";fb.style.color="var(--ink-soft)";
+  b2.onclick=()=>{
+    if(!SR){fb.textContent="Reconnaissance vocale indisponible ici.";return;}
+    const r=initRec(alts=>{
+      const s=best(alts,[say]);
+      fb.textContent=s>=.8?"Compris ✓":"Entendu : "+alts[0]+" — reprends";
+      fb.style.color=s>=.8?"var(--green)":"var(--ink-soft)";
+    },()=>{b2.textContent="Me tester";});
+    if(!r)return;
+    b2.textContent="J'écoute…";fb.textContent="";
+    try{r.start();}catch(e){}
+  };
+  row.append(b1,b2,fb);host.appendChild(row);
+}
+function paintList(hostId,items){
+  const host=$(hostId);host.innerHTML="";
+  items.forEach(d=>{
+    const el=document.createElement("div");el.className="drill";
+    el.innerHTML=`<h3>${d.t}</h3><p>${d.d}</p><p class="ex">${d.ex}</p>`;
+    testable(el,d.say);
+    host.appendChild(el);
+  });
+}
+$("goDrills").onclick=()=>{$("home").classList.add("hidden");$("drills").classList.remove("hidden");};
+$("quitDrills").onclick=()=>{$("drills").classList.add("hidden");$("home").classList.remove("hidden");};
+$("goGram").onclick=()=>{$("home").classList.add("hidden");$("gram").classList.remove("hidden");};
+$("quitGram").onclick=()=>{$("gram").classList.add("hidden");$("home").classList.remove("hidden");};
+
+/* hors ligne */
+if("serviceWorker" in navigator && location.protocol.startsWith("http")){
+  window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+}
+
+/* init */
+(async()=>{
+  await load();
+  paintCats();
+  paintList("drillList",DRILLS);
+  paintList("gramList",GRAM);
+  if(!SR)showWarn(false);
+})();
+</script>
