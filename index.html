@@ -3,100 +3,162 @@
 <title>Parla italiano</title>
 <meta name="description" content="Entraînement oral à l'italien : 200 cartes classées par niveau, du voyage aux idiomes.">
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#E7E3D8">
+<meta name="theme-color" content="#F4F2EA">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Parla italiano">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --paper:#E7E3D8;
-    --card:#F8F6F0;
-    --ink:#1B2B3A;
-    --ink-soft:#5E6B77;
-    --line:#CCD2CE;
-    --blue:#2B5A9B;
-    --ochre:#BE8A2A;
-    --green:#4C7A4E;
-    --seal:#9C3B2F;
-    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    --bg:#F4F2EA;
+    --card:#FFFFFF;
+    --vert:#3A4F3C;
+    --vert-c:#4E8C5B;
+    --vert-l:#E2EBDF;
+    --rouge:#B44039;
+    --rouge-l:#F7E3E0;
+    --ocre:#E2B469;
+    --ocre-l:#FBF0DC;
+    --ink:#26302A;
+    --ink-soft:#6E7A6F;
+    --line:#E3E0D4;
+    --ok:#4E8C5B;
+    --r:20px;
+    --sans:"Outfit",ui-rounded,"Segoe UI",system-ui,sans-serif;
+    --serif:"Fraunces",Georgia,"Times New Roman",serif;
   }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
   body{
-    background:var(--paper);color:var(--ink);font-family:var(--serif);
+    background:var(--bg);color:var(--ink);font-family:var(--sans);
     font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased;
   }
-  .wrap{max-width:660px;margin:0 auto;padding:26px 20px 64px}
-  header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap}
-  h1{font-size:27px;font-weight:600;letter-spacing:-.01em;margin:0}
-  h1 span{font-size:19px;color:var(--ink-soft);margin-left:10px;font-style:italic}
-  .score{font-size:14px;color:var(--ink-soft);text-align:right}
-  .score b{font-weight:600;color:var(--ink)}
-  .intro{color:var(--ink-soft);margin:0 0 22px;max-width:62ch}
+  .wrap{max-width:640px;margin:0 auto;padding:22px 18px 120px}
+  header{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:20px}
+  h1{font-family:var(--serif);font-size:26px;font-weight:700;margin:0;letter-spacing:-.015em;color:var(--vert)}
+  h1::after{content:"";display:block;width:64px;height:4px;border-radius:99px;margin:5px 0 3px;
+    background:linear-gradient(to right,var(--vert-c) 0 33%,#F4F2EA 33% 66%,var(--rouge) 66% 100%);
+    border:1px solid var(--line)}
+  h1 span{display:block;font-family:var(--sans);font-size:13px;font-weight:500;color:var(--rouge);font-style:italic;letter-spacing:.01em}
+  .score{font-size:13px;color:var(--ink-soft);text-align:right;line-height:1.35;white-space:nowrap}
+  .score b{font-weight:700;color:var(--vert)}
+  .hidden{display:none}
 
-  .tier{margin-bottom:20px}
-  .tierhead{display:flex;align-items:baseline;gap:10px;border-bottom:1px solid var(--line);padding-bottom:5px;margin-bottom:10px}
-  .tierhead h2{font-size:18px;font-weight:600;margin:0}
-  .tierhead .lvl{width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;
-    font-size:12.5px;color:var(--card);flex:none}
-  .l1{background:var(--green)} .l2{background:var(--blue)} .l3{background:var(--ochre)} .l4{background:var(--seal)}
-  .tierhead .pick{margin-left:auto;font-size:13.5px;color:var(--ink-soft);background:none;border:none;
-    font-family:inherit;cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:0}
-  .tierhead .desc{font-size:13.5px;color:var(--ink-soft);font-style:italic}
-  .cats{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:9px}
-  .cat{background:var(--card);border:1px solid var(--line);border-radius:2px;padding:11px 13px 10px;
-    text-align:left;cursor:pointer;font-family:inherit;font-size:15.5px;color:var(--ink);
-    display:flex;flex-direction:column;gap:1px}
-  .cat:hover{border-color:var(--blue)}
-  .cat.on{border-color:var(--blue);box-shadow:inset 0 0 0 1px var(--blue)}
-  .cat .it{font-size:13px;color:var(--seal);font-style:italic}
-  .cat .meta{font-size:12.5px;color:var(--ink-soft)}
+  /* tuiles d'accueil */
+  .tiles{display:grid;gap:12px;margin-bottom:22px}
+  .tile{
+    border:none;border-radius:var(--r);padding:19px 18px;cursor:pointer;text-align:left;
+    font-family:inherit;display:flex;align-items:center;gap:15px;width:100%;
+    box-shadow:0 2px 12px rgba(58,79,60,.07);
+  }
+  .tile .ic{
+    width:54px;height:54px;border-radius:16px;display:flex;align-items:center;justify-content:center;
+    font-size:27px;flex:0 0 auto;font-family:var(--serif);font-weight:700;
+  }
+  .tile .tx{display:flex;flex-direction:column;gap:2px;min-width:0}
+  .tile .tt{font-size:18px;font-weight:700;color:var(--ink)}
+  .tile .td{font-size:13.5px;color:var(--ink-soft);font-weight:400;line-height:1.35}
+  .tile.t1{background:var(--vert-l)}
+  .tile.t1 .ic{background:var(--vert-c);color:#fff}
+  .tile.t2{background:var(--ocre-l)}
+  .tile.t2 .ic{background:var(--ocre);color:#5E4310}
+  .tile.t3{background:var(--rouge-l)}
+  .tile.t3 .ic{background:var(--rouge);color:#fff}
 
-  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:18px 0}
-  button.act{font-family:inherit;font-size:16px;padding:11px 20px;border-radius:2px;cursor:pointer;
-    background:var(--ink);color:var(--card);border:1px solid var(--ink)}
-  button.act.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
-  button.act.ghost:hover{border-color:var(--ink)}
+  /* boutons */
+  button.act{
+    font-family:inherit;font-weight:600;font-size:16px;padding:13px 22px;border-radius:999px;
+    cursor:pointer;background:var(--vert);color:#fff;border:none;
+  }
+  button.act:hover{background:#2C3D2E}
+  button.act.ghost{background:transparent;color:var(--vert);border:1.5px solid var(--line)}
+  button.act.ghost:hover{background:var(--vert-l);border-color:var(--vert-l)}
   button.act:disabled{opacity:.4;cursor:default}
-  button:focus-visible,.cat:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+  .row{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
   .toggle{font-size:14px;color:var(--ink-soft);display:flex;align-items:center;gap:7px;cursor:pointer}
 
-  .stage{background:var(--card);border:1px solid var(--line);border-radius:2px;padding:26px 22px 22px;position:relative;text-align:center}
-  .seal{position:absolute;top:13px;right:13px;width:30px;height:30px;border-radius:50%;
-    color:var(--card);font-size:13px;display:flex;align-items:center;justify-content:center}
+  h2.ptitre{font-family:var(--serif);font-size:23px;font-weight:700;margin:0 0 4px;color:var(--vert)}
+  .intro{color:var(--ink-soft);font-size:14.5px;margin:0 0 18px;max-width:58ch}
+
+  /* paliers et rubriques */
+  .tier{margin-bottom:22px}
+  .tierhead{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:10px}
+  .tierhead h2{font-family:var(--serif);font-size:18px;font-weight:600;margin:0;color:var(--ink)}
+  .tierhead .desc{font-size:13px;color:var(--ink-soft);width:100%;margin-top:-4px}
+  .lvl{
+    width:26px;height:26px;border-radius:9px;display:flex;align-items:center;justify-content:center;
+    font-size:14px;font-weight:700;color:#fff;flex:0 0 auto;
+  }
+  .lvl.l1{background:var(--vert-c)}
+  .lvl.l2{background:var(--vert)}
+  .lvl.l3{background:var(--ocre);color:#6B4C08}
+  .lvl.l4{background:var(--rouge)}
+  .pick{
+    margin-left:auto;background:none;border:none;font-family:inherit;font-size:13px;font-weight:600;
+    color:var(--vert);cursor:pointer;text-decoration:underline;padding:0;
+  }
+  .cats{display:flex;flex-wrap:wrap;gap:8px}
+  .cat{
+    background:var(--card);border:1.5px solid var(--line);border-radius:999px;
+    padding:9px 15px;cursor:pointer;font-family:inherit;font-size:15px;font-weight:500;color:var(--ink-soft);
+    display:flex;align-items:center;gap:7px;
+  }
+  .cat .it{font-style:italic;font-size:13px;color:var(--rouge)}
+  .cat .meta{font-size:12px;opacity:.7}
+  .cat.on{background:var(--vert-l);border-color:var(--vert-c);color:var(--vert)}
+  .cat.on .it{color:var(--vert)}
+
+  /* barre d'action fixe */
+  .dock{
+    position:fixed;left:0;right:0;bottom:0;background:rgba(244,242,234,.94);
+    backdrop-filter:blur(8px);border-top:1px solid var(--line);
+    padding:12px 18px calc(12px + env(safe-area-inset-bottom,0px));z-index:20;
+  }
+  .dock .inner{max-width:640px;margin:0 auto;display:flex;gap:10px;align-items:center}
+  .dock button.act{flex:1;font-size:17px;padding:15px 20px}
+  .dock .cnt{font-size:13px;color:var(--ink-soft);white-space:nowrap}
+
+  /* carte */
+  .stage{background:var(--card);border-radius:var(--r);padding:26px 20px 22px;position:relative;text-align:center;
+    box-shadow:0 2px 14px rgba(58,79,60,.07)}
+  .seal{position:absolute;top:14px;right:14px;min-width:34px;height:34px;padding:0 9px;background:var(--ocre-l);
+    color:var(--rouge);font-family:var(--serif);font-size:14px;font-weight:600;display:flex;align-items:center;
+    justify-content:center;border-radius:12px}
   .emoji{font-size:72px;line-height:1;margin:4px 0 12px}
   .fr{font-size:22px;font-weight:600;margin:0 0 4px}
-  .hint{font-size:14px;color:var(--ink-soft);margin:0;font-style:italic}
-  .answer{margin:16px 0 0;min-height:78px}
-  .it-a{font-size:31px;line-height:1.3;margin:0;color:var(--blue)}
-  .note{font-size:14.5px;color:var(--ink-soft);margin:6px auto 0;max-width:48ch}
-  .veil{color:var(--ink-soft);font-size:15px;padding:24px 0;margin:0}
-
-  .mic{width:80px;height:80px;border-radius:50%;border:1.5px solid var(--ink);background:transparent;
-    font-size:29px;cursor:pointer;margin:18px auto 6px;display:block;color:var(--ink);transition:background .15s,border-color .15s}
-  .mic:hover{background:rgba(43,90,155,.1)}
-  .mic.live{border-color:var(--blue);background:rgba(43,90,155,.15);animation:pulse 1.15s ease-out infinite}
-  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(43,90,155,.4)}100%{box-shadow:0 0 0 22px rgba(43,90,155,0)}}
+  .hint{font-size:13.5px;color:var(--ink-soft);margin:0}
+  .answer{margin:16px 0 0;min-height:74px}
+  .it-a{font-family:var(--serif);font-size:30px;line-height:1.35;margin:0;color:var(--vert);font-weight:600}
+  .answer .note{font-size:14.5px;color:var(--ink-soft);margin:6px 0 0;font-style:italic}
+  .veil{color:var(--ink-soft);font-size:14.5px;padding:22px 0}
+  .mic{
+    width:84px;height:84px;border-radius:50%;border:none;background:var(--vert-c);color:#fff;
+    font-size:32px;cursor:pointer;margin:18px auto 6px;display:block;
+    box-shadow:0 4px 16px rgba(58,79,60,.32);
+  }
+  .mic.live{background:var(--rouge);animation:pulse 1.15s ease-out infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(180,64,57,.5)}100%{box-shadow:0 0 0 24px rgba(180,64,57,0)}}
   @media (prefers-reduced-motion:reduce){.mic.live{animation:none}}
+  .status{min-height:44px;font-size:14.5px;color:var(--ink-soft);margin:4px 0 0}
+  .status .heard{font-family:var(--serif);color:var(--ink)}
+  .status.good{color:var(--ok);font-weight:700}
+  .status.near{color:var(--rouge)}
+  .bar{height:6px;background:var(--line);margin:18px 0 8px;border-radius:99px;position:relative;overflow:hidden}
+  .bar i{position:absolute;left:0;top:0;bottom:0;background:var(--ocre);transition:width .3s;border-radius:99px}
 
-  .status{min-height:46px;font-size:15px;color:var(--ink-soft);margin:4px 0 0}
-  .status .heard{color:var(--ink);font-style:italic}
-  .status.good{color:var(--green);font-weight:600}
-  .status.near{color:var(--ochre)}
-
-  .bar{height:3px;background:var(--line);margin:20px 0 6px;position:relative}
-  .bar i{position:absolute;left:0;top:0;bottom:0;background:var(--blue);transition:width .3s}
-
-  .drill{background:var(--card);border:1px solid var(--line);border-radius:2px;padding:15px 17px;margin-bottom:9px}
-  .drill h3{margin:0 0 4px;font-size:17.5px;font-weight:600}
-  .drill p{margin:0 0 9px;color:var(--ink-soft);font-size:15px;max-width:58ch}
-  .drill .ex{font-size:20px;margin:0 0 9px;color:var(--ink)}
-  .drill .ex em{font-style:normal;color:var(--seal)}
-  small.foot{display:block;color:var(--ink-soft);font-size:13.5px;margin-top:22px;max-width:62ch}
-  .warn{border-left:2px solid var(--ochre);padding:10px 14px;background:rgba(190,138,42,.08);
-    font-size:14.5px;color:var(--ink-soft);margin-bottom:18px}
-  .hidden{display:none}
+  /* listes prononciation / grammaire */
+  .drill{background:var(--card);border-radius:var(--r);padding:16px 18px;margin-bottom:11px;
+    box-shadow:0 2px 10px rgba(58,79,60,.06)}
+  .drill h3{margin:0 0 4px;font-family:var(--serif);font-size:18px;font-weight:600;color:var(--vert)}
+  .drill p{margin:0 0 10px;color:var(--ink-soft);font-size:14.5px;max-width:58ch}
+  .drill .ex{font-family:var(--serif);font-size:20px;margin:0 0 10px;color:var(--ink)}
+  .drill .ex em{font-style:normal;color:var(--rouge);font-weight:700}
+  small.foot{display:block;color:var(--ink-soft);font-size:12.5px;margin-top:22px;max-width:60ch}
+  .warn{border-radius:14px;padding:12px 15px;background:var(--rouge-l);font-size:14px;color:var(--rouge);
+    margin-bottom:18px;font-weight:500}
 </style>
 
 <div class="wrap">
@@ -109,18 +171,42 @@
 
   <!-- ACCUEIL -->
   <section id="home">
-    <p class="intro">Une carte, une phrase à dire à voix haute. Si la reconnaissance vocale italienne te comprend, tu passes à la suivante. Choisis les rubriques : les quatre paliers vont du strict nécessaire en voyage au lexique que peu de non-natifs manient.</p>
+    <div class="tiles">
+      <button class="tile t1" id="goVocab">
+        <span class="ic">Aa</span>
+        <span class="tx"><span class="tt">Parler italien</span>
+        <span class="td">200 cartes, du strict nécessaire en voyage aux idiomes. Quatre paliers.</span></span>
+      </button>
+      <button class="tile t2" id="goDrills">
+        <span class="ic">gl</span>
+        <span class="tx"><span class="tt">Prononciation</span>
+        <span class="td">Les huit endroits où un francophone se trahit.</span></span>
+      </button>
+      <button class="tile t3" id="goGram">
+        <span class="ic">si</span>
+        <span class="tx"><span class="tt">Points de grammaire</span>
+        <span class="td">Congiuntivo, ci et ne, pronoms combinés, futur de probabilité.</span></span>
+      </button>
+    </div>
+    <small class="foot">Progression enregistrée automatiquement. Les cartes ratées reviennent plus souvent ; une carte est acquise après trois réussites.</small>
+  </section>
+
+  <!-- CHOIX DES RUBRIQUES -->
+  <section id="vocab" class="hidden">
+    <h2 class="ptitre">Parler italien</h2>
+    <p class="intro">Touche les rubriques que tu veux travailler, puis lance la série. Les quatre paliers vont du strict nécessaire en voyage au lexique que peu de non-natifs manient.</p>
     <div id="tiers"></div>
     <div class="row">
-      <button class="act" id="start">Commencer à parler</button>
-      <button class="act ghost" id="goDrills">Prononciation</button>
-      <button class="act ghost" id="goGram">Points de grammaire</button>
-    </div>
-    <div class="row" style="margin-top:-4px">
       <label class="toggle"><input type="checkbox" id="selfMode"> Mode sans micro (je m'auto-évalue)</label>
       <label class="toggle"><input type="checkbox" id="onlyWeak"> Réviser seulement mes ratés</label>
     </div>
-    <small class="foot">Progression enregistrée automatiquement. Les cartes ratées reviennent plus souvent ; une carte est acquise après trois réussites.</small>
+    <div class="row"><button class="act ghost" id="vocabBack">Retour</button></div>
+    <div class="dock">
+      <div class="inner">
+        <button class="act" id="start">Commencer</button>
+        <span class="cnt" id="startCnt"></span>
+      </div>
+    </div>
   </section>
 
   <!-- ENTRAÎNEMENT -->
@@ -537,6 +623,11 @@ function showWarn(blocked){
 
 /* ---------------- accueil ---------------- */
 let selected=new Set(["cortesia","viaggio","orientarsi","tavola"]);
+const ECRANS=["home","vocab","practice","drills","gram"];
+function ecran(id){
+  ECRANS.forEach(e=>$(e).classList.toggle("hidden",e!==id));
+  window.scrollTo(0,0);
+}
 function paintCats(){
   const host=$("tiers");host.innerHTML="";
   TIERS.forEach(t=>{
@@ -563,7 +654,13 @@ function paintCats(){
     });
     sec.append(head,grid);host.appendChild(sec);
   });
+  const dispo=W.filter(w=>selected.has(w.cat)).length;
+  $("startCnt").textContent = dispo ? dispo+" cartes" : "";
+  $("start").disabled = !dispo;
+  $("start").textContent = dispo ? "Commencer" : "Choisis une rubrique";
 }
+$("goVocab").onclick=()=>{ecran("vocab");paintCats();};
+$("vocabBack").onclick=()=>ecran("home");
 
 /* ---------------- session ---------------- */
 let deck=[],idx=0,cur=null,revealed=false,selfMode=false;
@@ -626,14 +723,13 @@ $("start").onclick=()=>{
   if(!SR&&!$("selfMode").checked)showWarn(false);
   buildDeck();
   if(!deck.length){alert("Aucune carte à réviser dans ces rubriques.");return;}
-  $("home").classList.add("hidden");$("drills").classList.add("hidden");$("gram").classList.add("hidden");
-  $("practice").classList.remove("hidden");
+  ecran("practice");
   $("mic").classList.remove("hidden");
   show();
 };
 $("quit").onclick=()=>{
   if(listening&&rec)rec.stop();
-  $("practice").classList.add("hidden");$("home").classList.remove("hidden");
+  ecran("vocab");paintCats();
   paintCats();
 };
 $("skip").onclick=()=>next();
@@ -678,7 +774,7 @@ function testable(host,say){
     const r=initRec(alts=>{
       const s=best(alts,[say]);
       fb.textContent=s>=.8?"Compris ✓":"Entendu : "+alts[0]+" — reprends";
-      fb.style.color=s>=.8?"var(--green)":"var(--ink-soft)";
+      fb.style.color=s>=.8?"var(--ok)":"var(--ink-soft)";
     },()=>{b2.textContent="Me tester";});
     if(!r)return;
     b2.textContent="J'écoute…";fb.textContent="";
@@ -695,10 +791,10 @@ function paintList(hostId,items){
     host.appendChild(el);
   });
 }
-$("goDrills").onclick=()=>{$("home").classList.add("hidden");$("drills").classList.remove("hidden");};
-$("quitDrills").onclick=()=>{$("drills").classList.add("hidden");$("home").classList.remove("hidden");};
-$("goGram").onclick=()=>{$("home").classList.add("hidden");$("gram").classList.remove("hidden");};
-$("quitGram").onclick=()=>{$("gram").classList.add("hidden");$("home").classList.remove("hidden");};
+$("goDrills").onclick=()=>ecran("drills");
+$("quitDrills").onclick=()=>ecran("home");
+$("goGram").onclick=()=>ecran("gram");
+$("quitGram").onclick=()=>ecran("home");
 
 /* hors ligne */
 if("serviceWorker" in navigator && location.protocol.startsWith("http")){

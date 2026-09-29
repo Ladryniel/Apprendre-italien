@@ -1,10 +1,11 @@
-const CACHE = "parla-italiano-v1";
+const CACHE = "parla-italiano-v2";
 const FILES = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
   "./icon-192.png",
-  "./icon-512.png"
+  "./icon-512.png",
+  "./icon-maskable-512.png"
 ];
 
 self.addEventListener("install", e => {
@@ -14,18 +15,24 @@ self.addEventListener("install", e => {
 self.addEventListener("activate", e => {
   e.waitUntil(
     caches.keys()
-      .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
+      .then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k))))
       .then(() => self.clients.claim())
   );
 });
 
+// Reseau d'abord : toute mise a jour du site arrive des qu'il y a du reseau.
+// Sans connexion, on sert la copie mise en cache.
 self.addEventListener("fetch", e => {
   if (e.request.method !== "GET") return;
   e.respondWith(
-    caches.match(e.request).then(hit => hit || fetch(e.request).then(res => {
-      const copy = res.clone();
-      caches.open(CACHE).then(c => c.put(e.request, copy)).catch(() => {});
-      return res;
-    }).catch(() => caches.match("./index.html")))
+    fetch(e.request)
+      .then(res => {
+        if (res && res.status === 200) {
+          const copie = res.clone();
+          caches.open(CACHE).then(c => c.put(e.request, copie));
+        }
+        return res;
+      })
+      .catch(() => caches.match(e.request).then(hit => hit || caches.match("./index.html")))
   );
 });
